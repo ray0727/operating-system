@@ -33,6 +33,7 @@ int main(int argc, char *argv[]){
         time_diff = (end.tv_sec - start.tv_sec)*1e6 + (end.tv_usec - start.tv_usec);
         printf("time cost = %luus\n", time_diff);
         time_sum +=time_diff;
+        ans = 0;
     }
     printf("average time cost is %lu us\n", time_sum/5);
 }
