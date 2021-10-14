@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <math.h>
+#include <time.h>
 
 #define INF 1000000000
 
@@ -22,10 +23,11 @@ int main(int argc, char *argv[]){
     u_int64_t datasize = atoi(argv[1]);
     u_int64_t time_diff, time_sum=0;
     struct timeval start, end; 
+    srand(time(NULL));
     printf("testing: datasize=%lu\n", datasize);
-    for(u_int64_t i=0; i<datasize; i++)
-        buffer[i] = rand();
-    
+    for(u_int64_t i=0; i<datasize; i++){
+        buffer[i] = rand()%1000;
+    }
     for(int test_time=0; test_time<5; test_time++){
         gettimeofday(&start, NULL);
         check_array(buffer, datasize);
@@ -36,4 +38,5 @@ int main(int argc, char *argv[]){
         ans = 0;
     }
     printf("average time cost is %lu us\n", time_sum/5);
+    return 0;
 }
