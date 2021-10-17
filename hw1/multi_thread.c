@@ -34,31 +34,33 @@ void* child(void* data){
 
 int main(int argc, char *argv[]){
     u_int64_t datasize = atoi(argv[1]),time_diff, time_sum=0;
-    u_int8_t process = atoi(argv[2]);
-    pid_t pid[process];  //進程號datatype
-    printf("testing: datasize=%lu, process=%u\n", datasize, process);
+    u_int8_t thread = atoi(argv[2]);
+    FILE *f;
+    f = fopen("multi_thread.csv", "a");
+    pid_t pid[thread];  //進程號datatype
+    printf("testing: datasize=%lu, thread=%u\n", datasize, thread);
     struct timeval start, end; 
     srand(time(NULL));
 
     for(u_int64_t i=0; i<datasize; i++){
         buffer[i] = rand()%1000;
     }
-    u_int64_t input[process][2];
-    for(u_int64_t i=0; i<process; i++){
-        input[i][0] = (datasize/process)*i;
-        if(i != (process-1))
-            input[i][1] = (datasize/process)*(i+1);
+    u_int64_t input[thread][2];
+    for(u_int64_t i=0; i<thread; i++){
+        input[i][0] = (datasize/thread)*i;
+        if(i != (thread-1))
+            input[i][1] = (datasize/thread)*(i+1);
         else
             input[i][1] = datasize;
     }
     for(int j=0; j<5; j++){
         gettimeofday(&start, NULL);
-        pthread_t thread[process];
-        for(int i=0; i<process; i++){
-            pthread_create(&thread[i], NULL, child, (void*)input[i]);
+        pthread_t th[thread];
+        for(int i=0; i<thread; i++){
+            pthread_create(&th[i], NULL, child, (void*)input[i]);
         }
-        for(int i=0; i<process; i++){
-            pthread_join(thread[i], NULL);
+        for(int i=0; i<thread; i++){
+            pthread_join(th[i], NULL);
         }
         gettimeofday(&end, NULL);
         printf("Integer %d occurs %ld times in the array\n", key, ans);
@@ -68,5 +70,7 @@ int main(int argc, char *argv[]){
         ans = 0;
     }
     printf("average time cost is %lu us\n",time_sum/5);
+    fprintf(f, "%lu, %d, %lu \n",datasize, thread, (time_sum)/5);
+    fclose(f);
     return 0;
 }

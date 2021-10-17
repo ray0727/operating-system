@@ -55,6 +55,8 @@ void multi_process(pid_t pid[], u_int64_t datasize, u_int8_t process)
 int main(int argc, char *argv[]){
     u_int64_t datasize = atoi(argv[1]),time_diff, time_sum=0;
     u_int8_t process = atoi(argv[2]);
+    FILE *f;
+    f = fopen("multi_process.csv", "a");
     pid_t pid[process];  //進程號datatype
     printf("testing: datasize=%lu, process=%u\n", datasize, process);
     struct timeval start, end; 
@@ -74,5 +76,7 @@ int main(int argc, char *argv[]){
         ans = 0;
     }
     printf("average time cost is %lu us\n",time_sum/5);
+    fprintf(f, "%lu, %d, %lu \n",datasize, process, (time_sum)/5);
+    fclose(f);
     return 0;
 }
